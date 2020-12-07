@@ -207,33 +207,25 @@ class VariationalAutoencoder():
 
     def train(self, x_train, batch_size, epochs, run_folder, print_every_n_batches = 100, initial_epoch = 0, lr_decay = 1):
 
-        custom_callback = CustomCallback(run_folder, print_every_n_batches, initial_epoch, self)
-        lr_sched = step_decay_schedule(initial_lr=self.learning_rate, decay_factor=lr_decay, step_size=1)
+        checkpoint_filepath=os.path.join(run_folder, "training/cp.ckpt")
+        checkpoint = ModelCheckpoint(checkpoint_filepath, save_weights_only = True, verbose=1)
 
-        checkpoint_filepath=os.path.join(run_folder, "weights/weights.h5")
-        checkpoint1 = ModelCheckpoint(checkpoint_filepath, save_weights_only = True, verbose=1)
-        checkpoint2 = ModelCheckpoint(os.path.join(run_folder, 'weights/weights.h5'), save_weights_only = True, verbose=1)
-
-        callbacks_list = [checkpoint1, checkpoint2, custom_callback, lr_sched]
-
-        self.model.fit(     
+        self.model.fit(
             x_train
             , x_train
             , batch_size = batch_size
             , shuffle = True
             , epochs = epochs
             , initial_epoch = initial_epoch
-            , callbacks = callbacks_list
+            , callbacks = [checkpoint]
         )
-
-
 
     def train_with_generator(self, data_flow, epochs, steps_per_epoch, run_folder, print_every_n_batches = 100, initial_epoch = 0, lr_decay = 1, ):
 
         custom_callback = CustomCallback(run_folder, print_every_n_batches, initial_epoch, self)
         lr_sched = step_decay_schedule(initial_lr=self.learning_rate, decay_factor=lr_decay, step_size=1)
 
-        checkpoint_filepath=os.path.join(run_folder, "weights/weights.h5")
+        checkpoint_filepath=os.path.join(run_folder, "weights/weights-{epoch:03d}-{loss:.2f}.h5")
         checkpoint1 = ModelCheckpoint(checkpoint_filepath, save_weights_only = True, verbose=1)
         checkpoint2 = ModelCheckpoint(os.path.join(run_folder, 'weights/weights.h5'), save_weights_only = True, verbose=1)
 
@@ -248,8 +240,8 @@ class VariationalAutoencoder():
             , epochs = epochs
             , initial_epoch = initial_epoch
             , callbacks = callbacks_list
-            , steps_per_epoch=steps_per_epoch 
-            )
+            , steps_per_epoch=steps_per_epoch
+        )
 
 
 
