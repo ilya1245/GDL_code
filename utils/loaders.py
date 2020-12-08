@@ -137,7 +137,7 @@ def load_model(model_class, folder):
 
     model = model_class(*params)
 
-    model.load_weights(os.path.join(folder, 'weights/weights.h5'))
+    model.load_weights(os.path.join(folder, 'training/cp.ckpt'))
 
     return model
 
