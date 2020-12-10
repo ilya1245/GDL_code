@@ -69,7 +69,7 @@ class GAN():
         self.d_losses = []
         self.g_losses = []
 
-        self.epoch = 0
+        self.epoch = 1
 
         self._build_discriminator()
         self._build_generator()
@@ -264,6 +264,7 @@ class GAN():
 
             if epoch % print_every_n_batches == 0:
                 self.sample_images(run_folder)
+                print ("Saving model after %d epochs" % (epoch))
                 self.model.save_weights(os.path.join(run_folder, 'weights/weights-%d.h5' % (epoch)))
                 self.model.save_weights(os.path.join(run_folder, 'weights/weights.h5'))
                 self.save_model(run_folder)
