@@ -189,7 +189,7 @@ def load_safari(mypath):
 
     slice_train = int(80000/len(txt_name_list))  ###Setting value to be 80000 for the final dataset
     i = 0
-    seed = np.random.randint(1, 10e6)
+    seed = np.random.randint(1, 1e7)
 
     for txt_name in txt_name_list:
         txt_path = os.path.join(mypath,txt_name)

@@ -23,11 +23,11 @@ except:
     COLAB = False
 
 if COLAB:
-    PROJECT_PATH = "/content/drive/My Drive/Colab Notebooks/Generative Deep Learning - kuboko/"
-    LIB_PATH = PROJECT_PATH
+    PROJECT_ROOT = "/content/drive/My Drive/Colab Notebooks/Generative Deep Learning - kuboko"
 else:
-    PROJECT_PATH = "../"
-    LIB_PATH = "../"
+    PROJECT_ROOT = "../"
+
+LIB_PATH = PROJECT_ROOT
 
 import sys
 if not LIB_PATH in sys.path:
@@ -39,19 +39,24 @@ import matplotlib.pyplot as plt
 
 from models.GAN import GAN
 from utils.loaders import load_safari
+from utils import io_utils as io
+import yaml
 
 # run params
-SECTION = 'gan'
-RUN_ID = '004'
-DATA_NAME = 'camel'
-RUN_FOLDER = PROJECT_PATH + 'run/{}/'.format(SECTION)
-RUN_FOLDER += '_'.join([RUN_ID, DATA_NAME])
+# SECTION = 'gan'
+# RUN_ID = '004'
+# DATA_NAME = 'camel'
+# RUN_FOLDER = PROJECT_ROOT + 'run/{}/'.format(SECTION)
+# RUN_FOLDER += '_'.join([RUN_ID, DATA_NAME])
+#
+# if not os.path.exists(RUN_FOLDER):
+#     os.makedirs(RUN_FOLDER)
+#     os.mkdir(os.path.join(RUN_FOLDER, 'viz'))
+#     os.mkdir(os.path.join(RUN_FOLDER, 'images'))
+#     os.mkdir(os.path.join(RUN_FOLDER, 'weights'))
 
-if not os.path.exists(RUN_FOLDER):
-    os.makedirs(RUN_FOLDER)
-    os.mkdir(os.path.join(RUN_FOLDER, 'viz'))
-    os.mkdir(os.path.join(RUN_FOLDER, 'images'))
-    os.mkdir(os.path.join(RUN_FOLDER, 'weights'))
+with open(os.path.join(PROJECT_ROOT, "config.yml"), "r") as ymlfile:
+    cfg = yaml.load(ymlfile, Loader=yaml.FullLoader)
 
 mode =  'build' #'load' #
 # DATA_NAME
@@ -60,14 +65,20 @@ import os
 from glob import glob
 import numpy as np
 
-mypath = os.path.join(PROJECT_PATH + "data", DATA_NAME)
-filenames = np.array(glob(os.path.join(mypath, '*.*')))
-print(mypath)
-print(filenames)
+# mypath = os.path.join(PROJECT_ROOT + "data", DATA_NAME)
+# filenames = np.array(glob(os.path.join(mypath, '*.*')))
+# print(mypath)
+# print(filenames)
 
 """## data"""
 
-(x_train, y_train) = load_safari(mypath)
+# (x_train, y_train) = load_safari(mypath)
+
+exec = cfg['exec']
+io.cfg = cfg['io']
+io.project_root = PROJECT_ROOT
+RUN_FOLDER = io.prepare_run_folders()
+(x_train, y_train) = io.load_camel_data()
 
 x_train.shape
 
