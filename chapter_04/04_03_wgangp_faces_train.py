@@ -3,7 +3,7 @@ import os
 import matplotlib.pyplot as plt
 
 from models.WGANGP import WGANGP
-from utils.loaders import load_celeb
+from utils.loaders import load_celeb_zip
 
 # run params
 SECTION = 'celeb'
@@ -25,7 +25,7 @@ mode =  'build' #'load' #
 BATCH_SIZE = 64
 IMAGE_SIZE = 64
 
-x_train = load_celeb(DATA_NAME, IMAGE_SIZE, BATCH_SIZE)
+x_train = load_celeb_zip(DATA_NAME, IMAGE_SIZE, BATCH_SIZE)
 
 x_train[0][0][0]
 

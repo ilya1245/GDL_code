@@ -12,6 +12,7 @@ import h5py
 
 import imageio
 from glob import glob
+import zipfile
 
 from tensorflow.keras.applications import vgg19
 from tensorflow.keras import backend as K
@@ -231,7 +232,7 @@ def load_cifar(label, num):
     y_data = np.concatenate([y_train[train_mask], y_test[test_mask]])
 
     x_data = (x_data.astype('float32') - 127.5) / 127.5
- 
+
     return (x_data, y_data)
 
 
@@ -242,12 +243,33 @@ def load_celeb(data_name, image_size, batch_size):
     data_gen = ImageDataGenerator(preprocessing_function=lambda x: (x.astype('float32') - 127.5) / 127.5)
 
     x_train = data_gen.flow_from_directory(data_folder
-                                            , target_size = (image_size,image_size)
-                                            , batch_size = batch_size
-                                            , shuffle = True
-                                            , class_mode = 'input'
-                                            , subset = "training"
-                                                )
+                                           , target_size=(image_size, image_size)
+                                           , batch_size=batch_size
+                                           , shuffle=True
+                                           , class_mode='input'
+                                           , subset="training"
+                                           )
+
+    return x_train
+
+
+def load_celeb_zip(data_name, image_size, batch_size):
+    # data_folder = os.path.join("./data", data_name)
+    data_folder = './'
+    unzip_folder = 'c:/tmp/data'
+
+    with zipfile.ZipFile("d:/Python_datasets/celeba_10000.zip", "r") as zip_ref:
+        zip_ref.extractall(unzip_folder)
+
+    data_gen = ImageDataGenerator(preprocessing_function=lambda x: (x.astype('float32') - 127.5) / 127.5)
+
+    x_train = data_gen.flow_from_directory(os.path.join(unzip_folder, data_folder)
+                                           , target_size=(image_size, image_size)
+                                           , batch_size=batch_size
+                                           , shuffle=True
+                                           , class_mode='input'
+                                           , subset="training"
+                                           )
 
     return x_train
 
